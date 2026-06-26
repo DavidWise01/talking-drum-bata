@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bàtá — the ciphered drum (ẹ̀nà bàtá)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600&family=Spectral:ital,wght@0,300;0,400;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--sea:#170d20;--line:rgba(154,152,166,.16);--lead:#9a98a6;--lead-dim:#5b5868;
+    --parch:#e9e2d2;--parch-dim:#b9b2a3;--gold:#d9a441;--gold-dim:#a87f33;--verd:#73b3a3;--murex:#b24a78;
+    --ochre:#cf8233;--steel:#8aa0c4;--H:#e6b34a;--M:#cf8233;--L:#9a98a6;}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:var(--sea);color:var(--parch);font-family:"Spectral",Georgia,serif;line-height:1.55;
+    -webkit-font-smoothing:antialiased;background-image:radial-gradient(1100px 560px at 82% -12%,rgba(178,74,120,.15),transparent 60%),
+      radial-gradient(820px 640px at 3% 112%,rgba(138,160,196,.08),transparent 55%);display:flex;justify-content:center}
+  .card{max-width:640px;width:100%;padding:32px 22px 50px}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold-dim)}
+  h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(42px,12vw,68px);margin:6px 0 0;line-height:.92;letter-spacing:-.5px}
+  h1 .gk{display:block;font-size:.3em;color:var(--lead);letter-spacing:.05em;margin-top:6px;font-style:italic}
+  .sub{font-style:italic;font-weight:300;color:var(--parch-dim);font-size:15.5px;margin:14px 0 0;max-width:55ch}
+  .sub b{color:var(--murex);font-style:normal;font-weight:400}
+  h2{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-dim);
+    margin:30px 0 12px;font-weight:500;border-top:1px solid var(--line);padding-top:18px}
+
+  .pads{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .pad{cursor:pointer;border:1px solid var(--lead-dim);border-radius:10px;padding:16px 8px;text-align:center;user-select:none;-webkit-user-select:none;
+    touch-action:none;transition:.06s;background:linear-gradient(180deg,#2a1622,#1a0f28)}
+  .pad b{display:block;font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:500}
+  .pad small{font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--lead-dim);letter-spacing:.05em;display:block;margin-top:2px}
+  .pad.H{border-color:rgba(230,179,74,.5)} .pad.H b{color:var(--H)}
+  .pad.M{border-color:rgba(207,130,51,.5)} .pad.M b{color:var(--M)}
+  .pad.L{border-color:rgba(154,152,166,.45)} .pad.L b{color:var(--L)}
+  .pad.down{transform:translateY(2px);filter:brightness(1.4)}
+  .ctrls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--lead-dim)}
+  button{cursor:pointer;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.18));border:1px solid var(--line);
+    border-radius:5px;color:var(--parch);font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.03em;padding:9px 14px;transition:.15s}
+  button:hover{border-color:rgba(178,74,120,.5);background:rgba(178,74,120,.08)} button:active{transform:translateY(1px)}
+  button.primary{border-color:rgba(178,74,120,.55);color:var(--murex)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{cursor:pointer;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.18));border:1px solid var(--line);
+    border-radius:9px;color:var(--parch);font-family:"Cormorant Garamond",serif;font-size:19px;padding:6px 13px;transition:.14s}
+  .chip:hover{border-color:rgba(178,74,120,.5);background:rgba(178,74,120,.07)}
+  .chip small{display:block;font-family:"Spectral",serif;font-style:italic;font-size:11.5px;color:var(--parch-dim)}
+
+  /* pipeline */
+  .pipe{display:grid;grid-template-columns:1fr;gap:10px;margin-top:6px}
+  .stage{background:rgba(0,0,0,.2);border:1px solid var(--line);border-radius:8px;padding:13px 15px;position:relative}
+  .stage .lab{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase}
+  .stage.src .lab{color:var(--verd)} .stage.ir .lab{color:var(--murex)} .stage.mc .lab{color:var(--ochre)}
+  .stage .val{font-family:"Cormorant Garamond",serif;font-size:27px;margin-top:3px;color:var(--parch);word-break:break-word}
+  .stage .tones{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;margin-top:5px}
+  .stage .gloss{font-style:italic;color:var(--parch-dim);font-size:12.5px;margin-top:3px}
+  .arrowdn{text-align:center;color:var(--lead-dim);font-family:"IBM Plex Mono",monospace;font-size:13px;line-height:.4;margin:-4px 0}
+  .strokes{font-family:"IBM Plex Mono",monospace;font-size:20px;letter-spacing:5px;margin-top:5px}
+  .tH{color:var(--H)} .tM{color:var(--M)} .tL{color:var(--L)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
+  input[type=text]{flex:1;min-width:150px;background:rgba(0,0,0,.22);border:1px solid var(--line);border-radius:5px;color:var(--parch);
+    font-family:"Cormorant Garamond",serif;font-size:19px;padding:9px 13px}
+  input:focus{outline:none;border-color:rgba(178,74,120,.5)}
+
+  .note{margin-top:24px;border-top:1px solid var(--line);padding-top:15px;font-family:"IBM Plex Mono",monospace;font-size:11px;line-height:1.85;color:var(--lead-dim)}
+  .note b{color:var(--gold-dim);font-weight:500}
+  .compiler{background:rgba(178,74,120,.06);border:1px solid rgba(178,74,120,.25);border-radius:8px;padding:14px 16px;margin-top:14px;font-size:14.5px;color:var(--parch-dim)}
+  .compiler b{color:var(--murex)} .compiler .v{color:var(--verd)} .compiler .o{color:var(--ochre)}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">a purple-paper instrument · the ciphered drum</div>
+  <h1>The Bàtá<span class="gk">ìlù bàtá · mouthpiece of Ṣàngó · speaks in code</span></h1>
+  <p class="sub">The bàtá has <b>fixed heads</b> — it can't bend pitch like the dùndún, so it can't imitate speech. Instead it <b>encodes</b> it. Yorùbá is first disguised into a secret language called <b>ẹ̀nà</b>, and only then struck onto the drum. A Cuban elder called the bàtá a “telegraph without wires.” It's really a compiler — and ẹ̀nà is the intermediate code.</p>
+
+  <h2>① the strokes — sharp, dry, fixed</h2>
+  <div class="pads">
+    <div class="pad L" id="padL"><b>LOW</b><small>big head</small></div>
+    <div class="pad M" id="padM"><b>MID</b><small>middle</small></div>
+    <div class="pad H" id="padH"><b>HIGH</b><small>ṣáṣá · sharp</small></div>
+  </div>
+  <div class="ctrls"><button id="flam">▶ the /r/ flam (double stroke)</button><span>no glide — every tone is a discrete strike</span></div>
+
+  <h2>② ẹ̀nà — the secret language</h2>
+  <p class="sub" style="margin-top:0">The rule: <b>echo every vowel onto a “g” syllable</b>, copying its tone. <i>Yorùbá</i> → <i>Yogorùgùbágá</i>. Outsiders hear gibberish; drummers hear plain Yorùbá. Pick a word, or type your own:</p>
+  <div class="chips" id="chips"></div>
+  <div class="row"><input type="text" id="yin" placeholder="type Yorùbá with tone-marks…" value="Ṣàngó"><button class="primary" id="enc">▶ encode</button></div>
+
+  <h2>③ the pipeline — a compiler with an intermediate language</h2>
+  <div class="pipe">
+    <div class="stage src"><span class="lab">source · spoken Yorùbá</span><div class="val" id="sVal">Ṣàngó</div><div class="tones" id="sTones"></div><div class="gloss" id="sGloss">the thunder deity — the bàtá is his drum</div></div>
+    <div class="arrowdn">▼ ẹ̀nà encode</div>
+    <div class="stage ir"><span class="lab">intermediate · ẹ̀nà (the cipher)</span><div class="val" id="iVal"></div><div class="tones" id="iTones"></div><div class="gloss">vowels echoed onto “g” — the disguise doubles the length</div></div>
+    <div class="arrowdn">▼ strike</div>
+    <div class="stage mc"><span class="lab">machine · bàtá strokes</span><div class="strokes" id="mStrokes"></div><div class="gloss">L / M / H heads — the drum's “instruction set”</div></div>
+  </div>
+  <div class="row"><button class="primary" id="compile">▶ compile &amp; play (plain → coded)</button></div>
+
+  <div class="compiler">
+    Your whole purple-paper compiler thread, in goatskin: <span class="v">Yorùbá</span> is the source language, <b>ẹ̀nà</b> is the intermediate representation, and the <span class="o">bàtá strokes</span> are the target machine code. Villepastour and a computer scientist literally modelled it that way — an interface between a natural language and the “machine language” of the drum. The 200-year curse, except this one's maybe 400 and runs on an instruction set you strike with a stick.
+  </div>
+
+  <div class="note">
+    <b>what's authentic.</b> the ẹ̀nà rule here — echo each vowel onto a “g” syllable, copying its tone — is the documented Yorùbá ẹ̀nà language game; tones are read straight from the orthography (à=low, a=mid, á=high). the bàtá's fixed unequal heads, the /r/ flam, “encode not imitate,” and the Ṣàngó/Awo ritual context are all real.
+    <br><b>honest frame.</b> the spoken ẹ̀nà game and Villepastour's <i>ẹnà bàtá</i> (the drummers' stroke-prescribing code, from her teacher Rabiu Ayandokun) are siblings, not identical — i'm modelling the principle (a coded intermediate language), not Ayandokun's exact stroke table. in a real bàtá ensemble up to three drums speak this code <i>at once</i>, polyphonically. the voice is a synth; this is a sacred, living tradition, handled with respect.
+  </div>
+</div>
+
+<script>
+(function(){
+  const F={L:165,M:220,H:300};
+  const VOWEL=/[aeiou][\u0300-\u036f]*/gi;
+  function enaStr(s){return s.normalize('NFD').replace(VOWEL,m=>m+'g'+m.toLowerCase()).normalize('NFC');}
+  function tonesOf(s){const d=s.normalize('NFD');const r=[];let m;const re=/[aeiou][\u0300-\u036f]*/gi;
+    while((m=re.exec(d))){const g=m[0];r.push(g.indexOf('\u0301')>=0?'H':g.indexOf('\u0300')>=0?'L':'M');}return r;}
+
+  // ---- audio: sharp bàtá ----
+  let ctx=null,master=null;
+  function init(){if(ctx)return;ctx=new (window.AudioContext||window.webkitAudioContext)();
+    master=ctx.createGain();master.gain.value=0.85;
+    const c=ctx.createConvolver();const len=Math.floor(ctx.sampleRate*0.5),ir=ctx.createBuffer(2,len,ctx.sampleRate);
+    for(let ch=0;ch<2;ch++){const d=ir.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,4.0);}
+    c.buffer=ir;const wet=ctx.createGain();wet.gain.value=0.07,dry=ctx.createGain();dry.gain.value=0.97;
+    master.connect(dry).connect(ctx.destination);master.connect(c);c.connect(wet).connect(ctx.destination);}
+  function resume(){if(ctx&&ctx.state==='suspended')ctx.resume();}
+  function strike(tone,t){
+    const f=F[tone];
+    const o=ctx.createOscillator();o.type='triangle';o.frequency.setValueAtTime(f*1.35,t);o.frequency.exponentialRampToValueAtTime(f,t+0.025);
+    const g=ctx.createGain();g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(0.5,t+0.003);g.gain.exponentialRampToValueAtTime(0.0001,t+0.13);
+    const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2700;
+    o.connect(lp).connect(g).connect(master);o.start(t);o.stop(t+0.18);
+    const nb=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.045),ctx.sampleRate),nd=nb.getChannelData(0);
+    for(let i=0;i<nd.length;i++)nd[i]=(Math.random()*2-1)*Math.pow(1-i/nd.length,1.6);
+    const ns=ctx.createBufferSource();ns.buffer=nb;const hp=ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=1900;
+    const ng=ctx.createGain();ng.gain.value=0.42;ns.connect(hp).connect(ng).connect(master);ns.start(t);ns.stop(t+0.06);
+  }
+
+  // ---- pads ----
+  function pad(el,tone){const go=e=>{if(e)e.preventDefault();init();resume();strike(tone,ctx.currentTime+0.004);
+      el.classList.add('down');setTimeout(()=>el.classList.remove('down'),85);};
+    el.addEventListener('mousedown',go);el.addEventListener('touchstart',go,{passive:false});}
+  pad(document.getElementById('padL'),'L');pad(document.getElementById('padM'),'M');pad(document.getElementById('padH'),'H');
+  document.getElementById('flam').addEventListener('click',()=>{init();resume();const t=ctx.currentTime+0.02;strike('H',t);strike('H',t+0.035);});
+
+  // ---- render strokes ----
+  function strokeHTML(tones){return tones.map(t=>`<span class="t${t}">${t==='H'?'●':t==='M'?'◍':'○'}</span>`).join(' ');}
+  function tonesHTML(tones){return tones.map(t=>`<span class="t${t}">${t}</span>`).join('<span style="color:#5b5868"> · </span>');}
+
+  // ---- words ----
+  const WORDS=[
+    {y:'bàtá',en:'the bàtá drum (also: shoe)'},
+    {y:'Ṣàngó',en:'thunder deity — the bàtá is his drum'},
+    {y:'Àyàn',en:'patron spirit of all drummers'},
+    {y:'Yorùbá',en:'the Yorùbá people / language'},
+    {y:'oríkì',en:'praise / lineage poetry'},
+    {y:'Olúwa',en:'Lord / God'},
+    {y:'ọmọ',en:'child'},
+    {y:'ilé',en:'house / home'}
+  ];
+  const sVal=document.getElementById('sVal'),sTones=document.getElementById('sTones'),sGloss=document.getElementById('sGloss'),
+        iVal=document.getElementById('iVal'),iTones=document.getElementById('iTones'),mStrokes=document.getElementById('mStrokes');
+  function load(y,gloss){const pt=tonesOf(y),ena=enaStr(y),et=tonesOf(ena);
+    sVal.textContent=y;sTones.innerHTML=tonesHTML(pt);sGloss.textContent=gloss||'';
+    iVal.textContent=ena;iTones.innerHTML=tonesHTML(et);
+    mStrokes.innerHTML=strokeHTML(et);
+    return {pt,ena,et};}
+  function playTones(tones,opt){opt=opt||{};init();resume();const t0=ctx.currentTime+0.05,step=opt.step||0.22;
+    tones.forEach((tn,i)=>strike(tn,t0+i*step));return (tones.length*step)*1000;}
+
+  const chips=document.getElementById('chips');
+  WORDS.forEach(w=>{const c=document.createElement('button');c.className='chip';
+    c.innerHTML=`${w.y}<small>${w.en}</small>`;
+    c.addEventListener('click',()=>{const r=load(w.y,w.en);playTones(r.et,{step:0.2});});chips.appendChild(c);});
+
+  // text input
+  const yin=document.getElementById('yin');
+  function encodeIn(){const y=(yin.value||'').trim();if(!y)return;const r=load(y,'(your input)');playTones(r.et,{step:0.2});}
+  document.getElementById('enc').addEventListener('click',encodeIn);
+  yin.addEventListener('keydown',e=>{if(e.key==='Enter')encodeIn();});
+
+  // compile & play: plain Yoruba, then coded ena
+  document.getElementById('compile').addEventListener('click',()=>{
+    const y=sVal.textContent;const pt=tonesOf(y),et=tonesOf(enaStr(y));
+    const d=playTones(pt,{step:0.26});
+    setTimeout(()=>playTones(et,{step:0.2}),d+420);
+  });
+
+  // initial
+  load('Ṣàngó','thunder deity — the bàtá is his drum');
+})();
+</script>
+</body>
+</html>
